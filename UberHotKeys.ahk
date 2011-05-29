@@ -1,13 +1,16 @@
 ; --------------------------------------------------
-; # is for the Windows key
-; ^ is for the Control key
-; ! is for the Alt key
-; + is for the Shift key
+; $ Remap
+; # Windows key
+; ^ Control
+; ! Alt
+; + Shift
 ; --------------------------------------------------
 
 ; --------------------------------------------------
 #NoTrayIcon
 #SingleInstance, force
+#WinActivateForce
+
 SetWorkingDir %A_ScriptDir%
 DetectHiddenWindows, On
 SetTitleMatchMode, 2
@@ -20,16 +23,10 @@ SetTitleMatchMode, 2
 ^!End::ExitApp
 
 ; --------------------------------------------------
-; New Evernote note
-; ctrl+alt+e
-; --------------------------------------------------
-^!e::!+n
-
-; --------------------------------------------------
 ; Create new folder
-; ctrl+n
+; winkey+n
 ; --------------------------------------------------
-^n::Send, {AppsKey}wf
+#n::Send, {AppsKey}wf
 
 ; --------------------------------------------------
 ; Paste as plain/unformatted text
@@ -78,7 +75,7 @@ IfWinExist, ahk_class AfxMDIFrame100su
  WinActivate
  Return
 }
-Run, "SmartFTP"
+Run, "C:\Program Files\SmartFTP Client\SmartFTP.exe"
 Return
 
 ; --------------------------------------------------
@@ -104,16 +101,20 @@ Return
 ; ctrl+alt+x
 ; --------------------------------------------------
 !`::
-If winamp_hidden = False
+if WinExist("ahk_class BaseWindow_RootWnd")
 {
- WinHide, Winamp
- winamp_hidden = True
+ if WinActive("ahk_class BaseWindow_RootWnd")
+ {
+  WinMinimize, ahk_class Winamp v1.x
+ }
+ Else
+ {
+  WinActivate, ahk_class Winamp v1.x
+ }
 }
 Else
 {
  Run, "Winamp"
- WinShow, Winamp
- winamp_hidden = False
 }
 Return
 
@@ -162,6 +163,18 @@ $CapsLock::Return
 +$CapsLock::Return
 +!$CapsLock::Return
 !$CapsLock::Return
+
+; --------------------------------------------------
+; Volume Up / Down using Ctrl+Shift+Mouse Wheel
+; ctrl+shift+mousewheelup/down
+; --------------------------------------------------
+^+WheelUp::
+Send, {Volume_Up}
+Return
+^+WheelDown::
+Send, {Volume_Down}
+Return
+; --------------------------------------------------
 
 ; --------------------------------------------------
 ; Remap extra mouse button 1 to middle mouse button
