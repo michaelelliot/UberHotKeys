@@ -215,16 +215,15 @@ XButton1::MButton
 ; --------------------------------------------------
 $Esc::
 SendInput, {Esc}
-If (GetKeyState("LButton") or GetKeyState("RButton")  or GetKeyState("MButton"))
+if (A_PriorHotkey == "$Esc" and A_TimeSincePriorHotkey < 400)
 {
-  Return
+  IfWinActive, ahk_class CabinetWClass
+  {
+    WinKill
+    Return
+  }
 }
-IfWinActive, ahk_class CabinetWClass
-{
- WinKill
- Return
-}
-Else IfWinActive, ahk_class ytWindow
+IfWinActive, ahk_class ytWindow
 {
  WinHide, ahk_class ytWindow
  WinMinimize, ahk_class ytWindow
