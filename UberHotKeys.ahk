@@ -98,17 +98,19 @@ Return
 
 ; --------------------------------------------------
 ; Start / show / hide Winamp
-; ctrl+alt+x
+; alt+~
 ; --------------------------------------------------
 !`::
-if WinExist("ahk_class BaseWindow_RootWnd")
+If WinExist("ahk_class BaseWindow_RootWnd")
 {
- if WinActive("ahk_class BaseWindow_RootWnd")
+ If WinActive("ahk_class BaseWindow_RootWnd")
  {
+  WinSet, Transparent, 1, ahk_class Winamp v1.x
   WinMinimize, ahk_class Winamp v1.x
  }
  Else
  {
+  WinSet, Transparent, 255, ahk_class Winamp v1.x
   WinActivate, ahk_class Winamp v1.x
  }
 }
@@ -117,6 +119,31 @@ Else
  Run, "Winamp"
 }
 Return
+
+; --------------------------------------------------
+; Start / show / hide X-Chat
+; ctrl+~
+; --------------------------------------------------
+^`::
+If WinExist("ahk_class gdkWindowToplevel")
+{
+ If WinActive("ahk_class gdkWindowToplevel")
+ {
+  WinClose, ahk_class gdkWindowToplevel
+ }
+ Else
+ {
+  WinShow, ahk_class gdkWindowToplevel
+  WinSet, Transparent, 245, ahk_class gdkWindowToplevel
+  WinActivate, ahk_class gdkWindowToplevel
+ }
+}
+Else
+{
+ Run, "C:\Program Files\XChat-WDK\xchat.exe"
+}
+Return
+
 
 ; --------------------------------------------------
 ; Ctrl+v that allows pasting into a command prompt
@@ -180,6 +207,42 @@ Return
 ; Remap extra mouse button 1 to middle mouse button
 ; --------------------------------------------------
 XButton1::MButton
+
+; --------------------------------------------------
+; Close windows explorer window (if active) or
+; minimize xchat or winamp if active
+; Esc
+; --------------------------------------------------
+$Esc::
+SendInput, {Esc}
+If (GetKeyState("LButton") or GetKeyState("RButton")  or GetKeyState("MButton"))
+{
+  Return
+}
+IfWinActive, ahk_class CabinetWClass
+{
+ WinKill
+ Return
+}
+Else IfWinActive, ahk_class ytWindow
+{
+ WinHide, ahk_class ytWindow
+ WinMinimize, ahk_class ytWindow
+ WinKill
+ Return
+}
+Else IfWinActive, ahk_class gdkWindowToplevel
+{
+ WinClose, ahk_class gdkWindowToplevel
+ Return
+}
+Else If WinActive("ahk_class BaseWindow_RootWnd")
+{
+ WinHide, ahk_class Winamp v1.x
+ WinMinimize, ahk_class Winamp v1.x
+ Return
+}
+Return
 
 ; --------------------------------------------------
 ;~LControl & WheelUp::
